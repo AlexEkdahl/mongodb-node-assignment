@@ -30,8 +30,11 @@ export default class GameDAO {
     }
   }
 
-  static async getGames({ filters = null, page = 0, limit = 20 } = {}) {
-    //check and populate filters fom query
+  static async getGames(
+    { filters = null, page = 0, limit = 20 } = {},
+    showConsole
+  ) {
+    //check and populate query fom filters
     let query = {}
     if (filters) {
       query = { $match: {} }
@@ -52,26 +55,24 @@ export default class GameDAO {
       },
     }
 
-    const filter = query.$match ? [query, lookUp] : [lookUp]
+    if (showConsole == 'true') query = query.$match ? [query, lookUp] : [lookUp]
 
     //find
-
     let pointer
     try {
-      pointer = await games.aggregate(filter)
+      pointer = await games.aggregate(query)
     } catch (error) {
-      console.error(`Unable to issue find command: ${error}`)
+      console.error(error)
       throw `Unable to issue find command: ${error}`
     }
+
     const displayPointer = pointer.limit(limit).skip(limit * page)
     try {
       const gamesList = await displayPointer.toArray()
       const totalNumGames = gamesList.length
       return { gamesList, totalNumGames, filters }
     } catch (error) {
-      console.error(
-        `Unable to convert pointer to array or problem counting documents: ${error}`
-      )
+      console.error(error)
       throw `Unable to convert pointer to array or problem counting documents: ${error}`
     }
   }

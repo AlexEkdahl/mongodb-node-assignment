@@ -17,23 +17,23 @@ export default class GameController {
 
   static async apiGetGames(req, res, next) {
     const limit = req.query.limit ? parseInt(req.query.limit, 10) : 20
-
     const page = req.query.page ? parseInt(req.query.page, 10) : 0
     let filters = {}
+    let showConsole
 
-    if (req.query.name) {
-      filters.name = req.query.name
-    }
-    if (req.query.genre) {
-      filters.genre = req.query.genre
-    }
+    if (req.query.name) filters.name = req.query.name
+    if (req.query.genre) filters.genre = req.query.genre
+    if (req.query.showConsole) showConsole = req.query.showConsole
 
     try {
-      const postResponse = await GameDAO.getGames({
-        filters,
-        page,
-        limit: limit,
-      })
+      const postResponse = await GameDAO.getGames(
+        {
+          filters,
+          page,
+          limit: limit,
+        },
+        showConsole
+      )
       res.status(200).json(postResponse)
     } catch (error) {
       res.status(400).json(error)
