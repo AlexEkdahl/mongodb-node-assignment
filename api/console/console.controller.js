@@ -56,4 +56,27 @@ export default class ConsoleController {
     //   total_results: totalNumConsoles,
     // }
   }
+  static async apiGetConsoleGames(req, res, next) {
+    const limit = req.query.limit ? parseInt(req.query.limit, 10) : 20
+    const page = req.query.page ? parseInt(req.query.page, 10) : 0
+    let filters = {}
+
+    if (req.query.name) {
+      filters.name = req.query.name
+    }
+    if (req.query.manufacture) {
+      filters.manufacture = req.query.manufacture
+    }
+
+    try {
+      const postResponse = await ConsoleDAO.getConsoleGames({
+        filters,
+        page,
+        limit: limit,
+      })
+      res.status(200).json(postResponse)
+    } catch (error) {
+      res.status(400).json(error)
+    }
+  }
 }

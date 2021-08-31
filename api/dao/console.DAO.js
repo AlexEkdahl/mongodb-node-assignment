@@ -60,4 +60,35 @@ export default class ConsoleDAO {
       throw `Unable to convert pointer to array or problem counting documents: ${error}`
     }
   }
+  static async getConsoleGames({ filters = null, page = 0, limit = 20 } = {}) {
+    //check and populate filters fom query
+    let query = {}
+    if (filters) {
+      if ('name' in filters) {
+        query.name = { $regex: filters['name'], $options: '$i' }
+      }
+      if ('manufacture' in filters) {
+        query.manufacture = { $regex: filters['manufacture'] }
+      }
+    }
+    //find
+    let pointer
+    try {
+      pointer = await consoles.find(query)
+    } catch (error) {
+      console.error(`Unable to issue find command: ${error}`)
+      throw `Unable to issue find command: ${error}`
+    }
+    const displayPointer = pointer.limit(limit).skip(limit * page)
+    try {
+      const consolesList = await displayPointer.toArray()
+      const totalNumConsoles = await consoles.countDocuments(query)
+      return { consolesList, totalNumConsoles, filters }
+    } catch (error) {
+      console.error(
+        `Unable to convert pointer to array or problem counting documents: ${error}`
+      )
+      throw `Unable to convert pointer to array or problem counting documents: ${error}`
+    }
+  }
 }

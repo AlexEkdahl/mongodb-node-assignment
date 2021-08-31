@@ -6,5 +6,6 @@ router
   .route('/console')
   .get(ConsoleCtrl.apiGetConsoles)
   .post(ConsoleCtrl.apiPostConsole)
+router.route('/console/games').get(ConsoleCtrl.apiGetConsoleGames)
 
 export default router
