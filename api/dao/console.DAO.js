@@ -45,7 +45,7 @@ export default class ConsoleDAO {
     try {
       pointer = await consoles.find(query)
     } catch (error) {
-      console.error(`Unable to issue find command: ${error}`)
+      console.error(error)
       throw `Unable to issue find command: ${error}`
     }
     const displayPointer = pointer.limit(limit).skip(limit * page)
@@ -54,9 +54,7 @@ export default class ConsoleDAO {
       const totalNumConsoles = await consoles.countDocuments(query)
       return { consolesList, totalNumConsoles, filters }
     } catch (error) {
-      console.error(
-        `Unable to convert pointer to array or problem counting documents: ${error}`
-      )
+      console.error(error)
       throw `Unable to convert pointer to array or problem counting documents: ${error}`
     }
   }
@@ -76,7 +74,7 @@ export default class ConsoleDAO {
     try {
       pointer = await consoles.find(query)
     } catch (error) {
-      console.error(`Unable to issue find command: ${error}`)
+      console.error(error)
       throw `Unable to issue find command: ${error}`
     }
     const displayPointer = pointer.limit(limit).skip(limit * page)
@@ -85,9 +83,7 @@ export default class ConsoleDAO {
       const totalNumConsoles = await consoles.countDocuments(query)
       return { consolesList, totalNumConsoles, filters }
     } catch (error) {
-      console.error(
-        `Unable to convert pointer to array or problem counting documents: ${error}`
-      )
+      console.error(error)
       throw `Unable to convert pointer to array or problem counting documents: ${error}`
     }
   }
