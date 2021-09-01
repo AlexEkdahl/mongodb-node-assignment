@@ -36,7 +36,7 @@ export default class GameDAO {
   ) {
     //check and populate query fom filters
     let query = {}
-    if (filters) {
+    if ('name' in filters || 'genre' in filters) {
       query = { $match: {} }
       if ('name' in filters) {
         query.$match.name = { $regex: filters.name, $options: '$i' }
@@ -56,6 +56,7 @@ export default class GameDAO {
     }
 
     if (showConsole == 'true') query = query.$match ? [query, lookUp] : [lookUp]
+    else query = [query]
 
     //find
     let pointer
